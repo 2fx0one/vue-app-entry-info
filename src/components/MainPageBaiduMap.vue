@@ -16,6 +16,7 @@
     <!--{{fullHeight}}-->
     <baidu-map :center="center" :zoom="zoom"
                :style="{width: '100%', height: baiduMapHeight + 'px' }"
+               @ready="handlerBaiduMapReady"
                class="bm-view">
       <bm-marker v-for="marker in markers" :position="{lng: marker.lng, lat: marker.lat}" @click="clickHandler(marker)">
         <bm-label :content="marker.labelName" :labelStyle="{color: 'red', fontSize : '14px'}"
@@ -31,6 +32,10 @@
         <!--<button @click="infoWindowClose(marker)">Clear</button>-->
       </bm-info-window>
 
+      <bm-control>
+        <!--<button @click="openDistanceTool">开启测距</button>-->
+        <cube-input v-model="keyword" :eye="eye" :placeholder="'请输入搜索地址'"></cube-input>
+      </bm-control>
 
       <!--<bm-control anchor="BMAP_ANCHOR_BOTTOM_LEFT">-->
         <!--&lt;!&ndash;<cube-checkbox-group&ndash;&gt;-->
@@ -68,7 +73,7 @@
   export default {
     name: "MainPageBaiduMap",
     created() {
-      console.log(this.fullHeight);
+      // console.log(this.fullHeight);
     },
     watch: {
       checkList: function (newVal, oldVal) {
@@ -108,7 +113,7 @@
             infoWindowContent: '案件内容'
           }
         ],
-        center: {lng: 115.89, lat: 28.68},
+        center: {lng: 115.89, lat: 20.68},
         zoom: 10,
         checkList: ['1', '2', '3'],
         options: [
@@ -137,6 +142,17 @@
       }
     },
     methods: {
+      handlerBaiduMapReady({BMap, map}) {
+        let _this = this;   // 设置一个临时变量指向vue实例，因为在百度地图回调里使用this，指向的不是vue实例；
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+          console.log(r);
+          _this.center = {lng: r.longitude, lat: r.latitude};     // 设置center属性值
+          _this.autoLocationPoint = {lng: r.longitude, lat: r.latitude};      // 自定义覆盖物
+          _this.initLocation = true;
+          console.log('center:', _this.center)    // 如果这里直接使用this是不行的
+        },{enableHighAccuracy: true})
+      },
       clickHandler(marker) {
         marker.infoWindowShow = true;
       },

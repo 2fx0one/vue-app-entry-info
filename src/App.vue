@@ -3,15 +3,18 @@
     <!--<img alt="Vue logo" src="./assets/logo.png">-->
     <!--<HelloWorld msg="Welcome to Your Vue.js App"/>-->
     <MainPage></MainPage>
+    <!--<hello-bar-code-scanner></hello-bar-code-scanner>-->
   </div>
 </template>
 
 <script>
 import MainPage from "./components/MainPage";
+import HelloBarCodeScanner from "./components/HelloBarCodeScanner";
 
 export default {
   name: 'app',
   components: {
+    HelloBarCodeScanner,
     MainPage
   }
 }

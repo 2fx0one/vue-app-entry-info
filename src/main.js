@@ -18,6 +18,11 @@ Vue.use(BaiduMap, {
   ak: 'qX6nyMAr7zAKWaGe5kmiPRVGitzXmgDj'
 })
 
+import ImgInputer from 'vue-img-inputer'
+import 'vue-img-inputer/dist/index.css'
+
+Vue.component('ImgInputer', ImgInputer)
+
 Vue.use(VueAxios, axios)
 Vue.use(VueAMap);
 VueAMap.initAMapApiLoader({

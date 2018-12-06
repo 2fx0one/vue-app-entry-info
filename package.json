@@ -10,12 +10,15 @@
   "dependencies": {
     "axios": "^0.18.0",
     "cube-ui": "~1.12.1",
+    "quagga": "^0.12.1",
     "sass-loader": "^7.1.0",
     "vue": "^2.5.17",
     "vue-amap": "^0.5.8",
     "vue-awesome": "^3.2.0",
     "vue-axios": "^2.1.4",
-    "vue-baidu-map": "^0.21.14"
+    "vue-baidu-map": "^0.21.14",
+    "vue-barcode-scanner": "^0.6.0",
+    "vue-img-inputer": "^2.1.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.2.0",
