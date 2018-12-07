@@ -14,7 +14,7 @@ import HelloBarCodeScanner from "./components/HelloBarCodeScanner";
 export default {
   name: 'app',
   components: {
-    HelloBarCodeScanner,
+    // HelloBarCodeScanner,
     MainPage
   }
 }

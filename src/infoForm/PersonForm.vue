@@ -1,5 +1,7 @@
 <template>
-
+  <div>
+    <!--<cube-form-item>a</cube-form-item>-->
+  </div>
 </template>
 <!--字段	是否需要录入	录入方式	说明-->
 <!--人员类型-->

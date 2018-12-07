@@ -36,7 +36,8 @@
       <cube-scroll>
         <!--<cube-form ref="myForm" :model="formModel" @validate="validateHandler" @submit="submitHandler">-->
         <cube-form ref="myForm" :model="formModel" @validate="validateHandler">
-          <cube-form-group :legend="'基本信息'">
+          <cube-form-group>
+            <p>基本信息</p>
             <cube-form-item :field="fields[0]">
               <cube-button @click="showDateTimePicker" :light="true">{{formModel.caseDatetime || ' 点击选择案发时间'}}
               </cube-button>
@@ -52,7 +53,7 @@
             <!--主案由-->
             <cube-form-item :field="fields[8]">
               <p style="font-size:16px; text-align: left"
-                 @click="popMainCaseReasonShow = true" :light="true">{{formModel.mainCaseReason || ' 点击选择辅案由'}}
+                 @click="popMainCaseReasonShow = true" :light="true">{{formModel.mainCaseReasonLabel || ' 点击选择主案由'}}
               </p>
               <!--<cube-button @click="showPopup('myPopup')" :light="true">{{formModel.caseDatetime || ' 点击选择主案由'}}-->
               <!--</cube-button>-->
@@ -61,7 +62,7 @@
             <!--辅案由-->
             <cube-form-item :field="fields[9]">
               <p style="font-size:14px; text-align: left"
-                 v-for="(reason, key) in formModel.secretaryCaseReason"
+                 v-for="(reason, key) in formModel.secretaryCaseReasonLabels"
                  @click="popSecretaryCaseReasonShow = true" :light="true">{{key+1 + " : " + reason || ' 点击选择辅案由'}}
               </p>
             </cube-form-item>
@@ -82,10 +83,12 @@
             <!--许可号-->
             <cube-form-item :field="fields[16]"></cube-form-item>
           </cube-form-group>
-          <!--<cube-form-group>-->
-          <!--<cube-button type="submit">Submit</cube-button>-->
-          <!--</cube-form-group>-->
+
           <cube-form-group>
+            <person-form></person-form>
+          </cube-form-group>
+
+          <cube-form-group :legend="'高级信息'">
             <cube-button @click="submitHandler">提交</cube-button>
 
             <!--<cube-button :primary="true">重置</cube-button>-->
@@ -101,10 +104,12 @@
 <script>
   import PopCheckBoxGroup from "../components/PopCheckBoxGroup";
   import PopRadioGroup from "../components/PopRadioGroup";
+  import mainCaseReasonOption from "./formData"
+  import PersonForm from "./PersonForm";
 
   export default {
     name: "BaseForm",
-    components: {PopRadioGroup, PopCheckBoxGroup},
+    components: {PersonForm, PopRadioGroup, PopCheckBoxGroup},
     data() {
       // sessionStorageFormDate = JSON.parse(sessionStorage.getItem(''));
       return {
@@ -113,29 +118,22 @@
 
         popupVisible: false,
         fullHeight: document.documentElement.clientHeight - 56,
-        currentRadioSelect: '2',
-        options: [
-          {
-            label: '案件',
-            value: '2',
-          },
-          {
-            label: '情报',
-            value: '3',
-          },
-        ],
 
         formModel: {
           caseDatetime: '', //案发时间
           caseLocation: '', //案发地点
           longitude: JSON.parse(sessionStorage.getItem('location'))['lng'],//store.state.location['lng'], // 经度
           latitude: JSON.parse(sessionStorage.getItem('location'))['lat'], //store.state.location['lat'], // 纬度
-          evidenceType: ['2'], //证据类型 	复选 书证、物证、鉴定结论、勘验笔录、询问笔录、证人证言、视听资料、其他；
+          evidenceType: ['1'], //证据类型 	复选 书证、物证、鉴定结论、勘验笔录、询问笔录、证人证言、视听资料、其他；
           caseSource: '投诉举报',// 案件来源	  投诉举报、市场查获、案件移交、指定管辖、上级交办、其他；
           caseSourceLocation: '',// 案件来源指向地	是		省市区（县），参考字典
           caseGoesLocation: '',// 案件去向指向地	是 省市区（县），参考字典
-          mainCaseReason: '销售无标志的外国卷烟（国标）', // *主案由 是	单选
-          secretaryCaseReason: ['销售无标志的外国卷烟（国标）'], // *辅案由 是	复选
+
+          mainCaseReason: '1', // *主案由 是	单选
+          mainCaseReasonLabel : '销售无标志的外国卷烟（国标）',
+          secretaryCaseReason: ['1'], // *辅案由 是	复选
+          secretaryCaseReasonLabels : ['销售无标志的外国卷烟（国标）'],
+
           coOrganiser: '', // *协办单位	是 input
           // 查获环节	是	下拉选择
           isMarket: true,// 是否集贸市场	是	下拉选择	是or否
@@ -198,7 +196,7 @@
               options: [
                 {
                   label: '书证',
-                  value: '2'
+                  value: '1'
                 }
                 , '物证', '鉴定结论', '勘验笔录', '询问笔录', '证人证言', '视听资料', '其它']
             },
@@ -244,54 +242,7 @@
             modelKey: 'mainCaseReason',
             label: '主案由',
             props: {
-              options: ['销售无标志的外国卷烟（国标）',
-                '销售无标志的外国卷烟、专供出口卷烟、没收的非法进口卷烟（省标）',
-                '未在当地烟草专卖批发企业进货（国标）',
-                '未在当地烟草专卖批发企业进货（省条例）（省标）',
-                '无证经营烟草制品零售业务（国标）',
-                '无烟草专卖零售许可证经营烟草制品零售业务（省标）',
-                '使用过期、失效许可证或转让许可证（国标）',
-                '使用涂改、伪造、变造的烟草专卖许可证（省标）',
-                '不及时办理许可证年检、变更、注销手续（国标）',
-                '不及时办理烟草专卖许可证变更、注销手续（省标）',
-                '其他（国标）',
-                '未亮证经营烟草制品（省标）',
-                '以营利为目的、非法互相购销烟草制品（进货方）（省标）',
-                '以盈利为目的、非法互相购销烟草制品（销售方）（省标）',
-                '非法储存、投递、运输走私烟草制品（省标）',
-                '销售走私卷烟（省标）',
-                '运输、存储、投递假冒、无商标以及霉坏变质的烟草制品（省标）',
-                '生产销售假冒商标、无商标、霉变烟草制品（省标）',
-                '为生产、销售走私、假冒商标卷烟等违法行为提供条件（省标）',
-                '非法收购卷烟、雪茄烟（省标）',
-                '非法印刷、销售、使用烟草专卖标识（省标）',
-                '无烟草专卖品准运证运输烟草专卖品（超量邮寄、携带）（国标）',
-                '邮寄、异地携带烟草、烟草制品超过有关规定（省标）',
-                '超越许可证规定范围从事烟草制品批发业务（有批发企业许可证）（国标）',
-                '超越烟草专卖批发企业许可证规定范围从事烟草制品批发业务（省标）',
-                '销售出口倒流国产卷烟（国标）',
-                '无烟草专卖品准运证运输烟草专卖品（国标）',
-                '无烟草专卖品准运证运输烟草专卖品（情节较重）（国标）',
-                '承运无烟草专卖品准运证运输的烟草专卖品（国标）',
-                '无证生产烟草制品（国标）',
-                '无证生产卷烟纸、滤嘴棒、烟用丝束、烟草专用机械（国标）',
-                '无证批发烟草制品（国标）',
-                '无证经营烟叶、卷烟纸、滤嘴棒、烟用丝束和烟草专卖机械（国标）',
-                '无证经营烟草专卖品进出口业务（国标）',
-                '无证经营外国烟草制品购销业务（国标）',
-                '擅自跨省经营烟草专卖品批发业务（国标）',
-                '为无烟草专卖许可证的单位或者个人提供烟草专卖品（国标）',
-                '销售非法生产的烟草专卖品（国标）',
-                '不按规定存放免税烟草制品（国标）',
-                '免税店经营未加贴专门标志的卷烟、雪茄烟（国标）',
-                '销售霉变卷烟（国标）',
-                '非法取得烟草专卖品准运证（国标）',
-                '从无证企业购买卷烟纸、滤嘴棒、烟用丝束、烟草专用机械（国标）',
-                '擅自拍卖烟草专卖品（国标）',
-                '向无烟草专卖生产企业许可证的单位或者个人销售卷烟纸、滤嘴棒、烟用丝束、烟草专用机械（国标）',
-                '擅自收购烟草（国标）',
-                '销售没收的非法进口卷烟（国标）'
-              ]
+              options: mainCaseReasonOption
             },
             rules: {
               required: true
@@ -302,54 +253,7 @@
             modelKey: 'secretaryCaseReason',
             label: '辅案由', //复选
             props: {
-              options: ['销售无标志的外国卷烟（国标）',
-                '销售无标志的外国卷烟、专供出口卷烟、没收的非法进口卷烟（省标）',
-                '未在当地烟草专卖批发企业进货（国标）',
-                '未在当地烟草专卖批发企业进货（省条例）（省标）',
-                '无证经营烟草制品零售业务（国标）',
-                '无烟草专卖零售许可证经营烟草制品零售业务（省标）',
-                '使用过期、失效许可证或转让许可证（国标）',
-                '使用涂改、伪造、变造的烟草专卖许可证（省标）',
-                '不及时办理许可证年检、变更、注销手续（国标）',
-                '不及时办理烟草专卖许可证变更、注销手续（省标）',
-                '其他（国标）',
-                '未亮证经营烟草制品（省标）',
-                '以营利为目的、非法互相购销烟草制品（进货方）（省标）',
-                '以盈利为目的、非法互相购销烟草制品（销售方）（省标）',
-                '非法储存、投递、运输走私烟草制品（省标）',
-                '销售走私卷烟（省标）',
-                '运输、存储、投递假冒、无商标以及霉坏变质的烟草制品（省标）',
-                '生产销售假冒商标、无商标、霉变烟草制品（省标）',
-                '为生产、销售走私、假冒商标卷烟等违法行为提供条件（省标）',
-                '非法收购卷烟、雪茄烟（省标）',
-                '非法印刷、销售、使用烟草专卖标识（省标）',
-                '无烟草专卖品准运证运输烟草专卖品（超量邮寄、携带）（国标）',
-                '邮寄、异地携带烟草、烟草制品超过有关规定（省标）',
-                '超越许可证规定范围从事烟草制品批发业务（有批发企业许可证）（国标）',
-                '超越烟草专卖批发企业许可证规定范围从事烟草制品批发业务（省标）',
-                '销售出口倒流国产卷烟（国标）',
-                '无烟草专卖品准运证运输烟草专卖品（国标）',
-                '无烟草专卖品准运证运输烟草专卖品（情节较重）（国标）',
-                '承运无烟草专卖品准运证运输的烟草专卖品（国标）',
-                '无证生产烟草制品（国标）',
-                '无证生产卷烟纸、滤嘴棒、烟用丝束、烟草专用机械（国标）',
-                '无证批发烟草制品（国标）',
-                '无证经营烟叶、卷烟纸、滤嘴棒、烟用丝束和烟草专卖机械（国标）',
-                '无证经营烟草专卖品进出口业务（国标）',
-                '无证经营外国烟草制品购销业务（国标）',
-                '擅自跨省经营烟草专卖品批发业务（国标）',
-                '为无烟草专卖许可证的单位或者个人提供烟草专卖品（国标）',
-                '销售非法生产的烟草专卖品（国标）',
-                '不按规定存放免税烟草制品（国标）',
-                '免税店经营未加贴专门标志的卷烟、雪茄烟（国标）',
-                '销售霉变卷烟（国标）',
-                '非法取得烟草专卖品准运证（国标）',
-                '从无证企业购买卷烟纸、滤嘴棒、烟用丝束、烟草专用机械（国标）',
-                '擅自拍卖烟草专卖品（国标）',
-                '向无烟草专卖生产企业许可证的单位或者个人销售卷烟纸、滤嘴棒、烟用丝束、烟草专用机械（国标）',
-                '擅自收购烟草（国标）',
-                '销售没收的非法进口卷烟（国标）'
-              ]
+              options: mainCaseReasonOption
             },
             rules: {
               required: true
@@ -434,11 +338,19 @@
       }
     },
     methods: {
-      mainCaseReasonChange(val) {
-        this.formModel.mainCaseReason = val;
+      // mainCaseReason: '1', // *主案由 是	单选
+      // mainCaseReasonLabel : '',
+      // secretaryCaseReason: [], // *辅案由 是	复选
+      // secretaryCaseReasonLabels : [],
+
+      mainCaseReasonChange(v) {
+        this.formModel.mainCaseReason = v.value;
+        this.formModel.mainCaseReasonLabel = v.label;
       },
-      secretaryCaseReasonChange(val) {
-        this.formModel.secretaryCaseReason = val;
+      secretaryCaseReasonChange(v) {
+        console.log(v)
+        this.formModel.secretaryCaseReason = v.values;
+        this.formModel.secretaryCaseReasonLabels = v.labels;
       },
       validateHandler(result) {
         this.validity = result.validity

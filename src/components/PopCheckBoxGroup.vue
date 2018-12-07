@@ -42,8 +42,13 @@
       currentSelect(val) {
         this.myModel = val
       },
-      myModel(val) {
-        this.$emit('change', val)
+      myModel(values) {
+        // console.log(typeof this.options)
+        let labels = this.options.filter(v => values.indexOf(v.value) !== -1).map(v => v.label)
+        this.$emit('change', {
+          values,
+          labels
+        })
       }
     },
     methods: {

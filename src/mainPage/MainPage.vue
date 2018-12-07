@@ -34,8 +34,8 @@
     },
     data() {
       return {
-        // currentView: 'form',
-        currentView: 'map',
+        currentView: 'form',
+        // currentView: 'map',
         // currentLabels: '地图查看',
         // labels: [
         //   '地图查看',
