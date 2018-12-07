@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import MainPage from "./components/MainPage";
+import MainPage from "./mainPage/MainPage";
 import HelloBarCodeScanner from "./components/HelloBarCodeScanner";
 
 export default {

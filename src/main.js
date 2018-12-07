@@ -4,11 +4,15 @@ import './cube-ui'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 
+import MintUI from 'mint-ui'
+import 'mint-ui/lib/style.css'
+Vue.use(MintUI)
+
 import App from './App.vue'
+import store from './store'
 
 import 'vue-awesome/icons'
 import Icon from 'vue-awesome/components/Icon'
-
 Vue.component('icon', Icon)
 
 
@@ -33,6 +37,8 @@ VueAMap.initAMapApiLoader({
 });
 
 Vue.config.productionTip = false
+
 new Vue({
+  store,
   render: h => h(App),
 }).$mount('#app')

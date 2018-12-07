@@ -70,6 +70,7 @@
 </template>
 
 <script>
+  import store from '../store/index'
   export default {
     name: "MainPageBaiduMap",
     created() {
@@ -113,8 +114,8 @@
             infoWindowContent: '案件内容'
           }
         ],
-        center: {lng: 115.89, lat: 20.68},
-        zoom: 10,
+        center: {lng: 115.89, lat: 28.68},
+        zoom: 9,
         checkList: ['1', '2', '3'],
         options: [
           {
@@ -143,15 +144,16 @@
     },
     methods: {
       handlerBaiduMapReady({BMap, map}) {
-        let _this = this;   // 设置一个临时变量指向vue实例，因为在百度地图回调里使用this，指向的不是vue实例；
-        var geolocation = new BMap.Geolocation();
-        geolocation.getCurrentPosition(function(r){
-          console.log(r);
-          _this.center = {lng: r.longitude, lat: r.latitude};     // 设置center属性值
-          _this.autoLocationPoint = {lng: r.longitude, lat: r.latitude};      // 自定义覆盖物
-          _this.initLocation = true;
-          console.log('center:', _this.center)    // 如果这里直接使用this是不行的
-        },{enableHighAccuracy: true})
+        // let _this = this;   // 设置一个临时变量指向vue实例，因为在百度地图回调里使用this，指向的不是vue实例；
+        // var geolocation = new BMap.Geolocation();
+        new BMap.Geolocation().getCurrentPosition( (result) => {
+            this.center = {lng: result.longitude, lat: result.latitude};     // 设置center属性值
+          // this.autoLocationPoint = {lng: result.longitude, lat: result.latitude};      // 自定义覆盖物
+          // this.initLocation = true;
+            console.log('center:', this.center)    // 如果这里直接使用this是不行的
+            this.$store.dispatch("updateLocation", this.center);
+
+        }, {enableHighAccuracy: true})
       },
       clickHandler(marker) {
         marker.infoWindowShow = true;
