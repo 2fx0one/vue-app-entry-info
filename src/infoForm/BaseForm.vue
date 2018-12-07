@@ -32,8 +32,8 @@
     </pop-check-box-group>
 
 
-    <div :style="{width: '100%', height: fullHeight + 'px' }">
-      <cube-scroll>
+    <div >
+      <cube-scroll :style="{width: '100%', height: fullHeight + 'px' }">
         <!--<cube-form ref="myForm" :model="formModel" @validate="validateHandler" @submit="submitHandler">-->
         <cube-form ref="myForm" :model="formModel" @validate="validateHandler">
           <cube-form-group>
@@ -63,6 +63,7 @@
             <cube-form-item :field="fields[9]">
               <p style="font-size:14px; text-align: left"
                  v-for="(reason, key) in formModel.secretaryCaseReasonLabels"
+                 :key="reason.id"
                  @click="popSecretaryCaseReasonShow = true" :light="true">{{key+1 + " : " + reason || ' 点击选择辅案由'}}
               </p>
             </cube-form-item>
@@ -84,11 +85,14 @@
             <cube-form-item :field="fields[16]"></cube-form-item>
           </cube-form-group>
 
-          <cube-form-group>
-            <person-form></person-form>
+          <p class="split-bar" v-if="personFrom.length !== 0">&nbsp</p>
+          <cube-form-group :legend="''">
+            <person-form v-for="(item, key) in personFrom" :key="item.id" :title="'涉案人员'+(key+1)"></person-form>
+            <cube-button @click="addPersomForm" :inline="true">添加涉案人员</cube-button>
+            <cube-button @click="removePersomForm" :inline="true" :primary="true">删除涉案人员</cube-button>
           </cube-form-group>
 
-          <cube-form-group :legend="'高级信息'">
+          <cube-form-group :legend="'====='">
             <cube-button @click="submitHandler">提交</cube-button>
 
             <!--<cube-button :primary="true">重置</cube-button>-->
@@ -119,6 +123,8 @@
         popupVisible: false,
         fullHeight: document.documentElement.clientHeight - 56,
 
+        personFrom : [],
+
         formModel: {
           caseDatetime: '', //案发时间
           caseLocation: '', //案发地点
@@ -143,6 +149,7 @@
           transportCaseLocation: '物流场站',// 运输案件案发地 // 是	下拉选择 运输案件案发地  	物流场站、道路途中；
           PermitNumber: ''// 许可证号	是 input
         },
+
         fields: [
           {
             type: 'input',
@@ -348,7 +355,7 @@
         this.formModel.mainCaseReasonLabel = v.label;
       },
       secretaryCaseReasonChange(v) {
-        console.log(v)
+        // console.log(v)
         this.formModel.secretaryCaseReason = v.values;
         this.formModel.secretaryCaseReasonLabels = v.labels;
       },
@@ -358,7 +365,7 @@
         // console.log('validity', result.validity, result.valid, result.dirty, result.firstInvalidFieldIndex)
       },
       submitHandler() {
-        console.log("submit");
+        // console.log("submit");
         this.$refs.myForm.validate(valid => {
           if (valid) {
             console.log(this.formModel);
@@ -408,6 +415,15 @@
         //   txt: 'Picker canceled',
         //   time: 1000
         // }).show()
+      },
+
+      addPersomForm() {
+        this.personFrom.push({});
+      },
+      removePersomForm() {
+        if(this.personFrom.length !== 0) {
+          this.personFrom.splice(this.personFrom.length-1, 1)
+        }
       }
 
     }
@@ -421,7 +437,10 @@
   .cube-select {
     text-align: left;
   }
-
+  .split-bar {
+    background-color: #fa915a;
+    height: 10px;
+  }
   /*.cube-select > span  {*/
   /*position: relative;*/
   /*left: -53px;*/

@@ -1,6 +1,6 @@
 <template>
   <div v-if="popShow">
-    <cube-button :primary="true" @click="close">选择{{title}}完成!</cube-button>
+    <cube-button :primary="true" @click="close">{{title}}选择完成!</cube-button>
 
     <div>
       <div>
@@ -43,7 +43,7 @@
         this.selected = val
       },
       selected(val) {
-        console.log(val)
+        // console.log(val)
         // console.log(this.options
         this.options.find(e => e.value === val)
         this.$emit('change', this.options.find(e => e.value === val))
