@@ -36,8 +36,8 @@
       <cube-scroll :style="{width: '100%', height: fullHeight + 'px' }">
         <!--<cube-form ref="myForm" :model="formModel" @validate="validateHandler" @submit="submitHandler">-->
         <cube-form ref="myForm" :model="formModel" @validate="validateHandler">
-          <cube-form-group>
-            <p>基本信息</p>
+            <!--<p>{{title}}</p>-->
+          <cube-form-group :legend="title">
             <cube-form-item :field="fields[0]">
               <cube-button @click="showDateTimePicker" :light="true">{{formModel.caseDatetime || ' 点击选择案发时间'}}
               </cube-button>
@@ -115,6 +115,7 @@
     name: "BaseForm",
     components: { PopRadioGroup, PopCheckBoxGroup},
     props: {
+      title: String,
       visible: {
         type: Boolean,
         default: true
@@ -239,7 +240,7 @@
               placeholder: '请输入'
             },
             rules: {
-              required: true
+              required: false
             }
           },
           {
@@ -250,7 +251,7 @@
               placeholder: '请输入'
             },
             rules: {
-              required: true
+              required: false
             }
           },
           { //8
@@ -283,7 +284,7 @@
               placeholder: '请输入',
             },
             rules: {
-              required: true
+              required: false
             }
           },
           { //[11]
@@ -304,7 +305,7 @@
               placeholder: '请输入',
             },
             rules: {
-              required: true
+              required: false
             }
           },
           {
@@ -346,7 +347,7 @@
               placeholder: '请输入',
             },
             rules: {
-              required: true
+              required: false
             }
           },
         ]
@@ -384,7 +385,6 @@
         });
         // console.log(this.$ref['formBase']);
         // this.$refs['formBase'].validateHandler()
-        return
 
       },
       showDateTimePicker() {
@@ -427,15 +427,15 @@
         //   time: 1000
         // }).show()
       },
-
-      addPersomForm() {
-        this.personFrom.push({});
-      },
-      removePersomForm() {
-        if(this.personFrom.length !== 0) {
-          this.personFrom.splice(this.personFrom.length-1, 1)
-        }
-      }
+      //
+      // addPersomForm() {
+      //   this.personFrom.push({});
+      // },
+      // removePersomForm() {
+      //   if(this.personFrom.length !== 0) {
+      //     this.personFrom.splice(this.personFrom.length-1, 1)
+      //   }
+      // }
 
     }
 

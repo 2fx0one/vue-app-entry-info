@@ -3,9 +3,9 @@
   <div>
     <!--<cube-button :primary="true">Button</cube-button>-->
     <!--<cube-button :primary="true">Button</cube-button>-->
-    <base-form :visible.sync="showBaseForm" @submit="baseSubmit"></base-form>
-    <person-form  :visible.sync="ShowPersonFrom" @submit="personSubmit"></person-form>
-    <item-form  :visible.sync="ShowItemFrom" @submit="itemSubmit"></item-form>
+    <base-form :visible.sync="showBaseForm" :title="'基本信息'" @submit="baseSubmit"></base-form>
+    <person-form  :visible.sync="ShowPersonFrom" :title="'涉案人员信息'" @submit="personSubmit"></person-form>
+    <item-form  :visible.sync="ShowItemFrom" :title="'涉案物品信息'" @submit="itemSubmit"></item-form>
   </div>
 </template>
 

@@ -109,9 +109,13 @@
         }
       },
       mainPageSubmitFrom(val) {
-        console.log(val)
+        // console.log(val)
         this.currentView = 'map'
         this.selectedLabelDefault = '地图查看'
+        this.$createToast({
+          txt: '提交成功',
+          type: 'correct'
+        }).show();
 
       }
     }
