@@ -1,5 +1,5 @@
 <template>
-  <div :style="{width: '100%', height: fullHeight + 'px' }">
+  <div v-if="showSelfBaseForm" :style="{width: '100%', height: fullHeight + 'px' }">
     <!--<div>-->
     <!--<cube-radio-group v-model="currentRadioSelect" :options="options" :horizontal="true"/>-->
     <!--<cube-checkbox-group-->
@@ -85,18 +85,18 @@
             <cube-form-item :field="fields[16]"></cube-form-item>
           </cube-form-group>
 
-          <p class="split-bar" v-if="personFrom.length !== 0">&nbsp</p>
-          <cube-form-group :legend="''">
-            <person-form v-for="(item, key) in personFrom" :key="item.id" :title="'涉案人员'+(key+1)"></person-form>
-            <cube-button @click="addPersomForm" :inline="true">添加涉案人员</cube-button>
-            <cube-button @click="removePersomForm" :inline="true" :primary="true">删除涉案人员</cube-button>
-          </cube-form-group>
+          <!--<p class="split-bar" v-if="personFrom.length !== 0">&nbsp</p>-->
+          <!--<cube-form-group :legend="''">-->
+            <!--<person-form v-for="(item, key) in personFrom" :key="item.id" :title="'涉案人员'+(key+1)"></person-form>-->
+            <!--&lt;!&ndash;<cube-button @click="addPersomForm" :inline="true">添加涉案人员</cube-button>&ndash;&gt;-->
+            <!--&lt;!&ndash;<cube-button @click="removePersomForm" :inline="true" :primary="true">删除涉案人员</cube-button>&ndash;&gt;-->
+          <!--</cube-form-group>-->
 
-          <cube-form-group :legend="'====='">
-            <cube-button @click="submitHandler">提交</cube-button>
-
+          <!--<cube-form-group :legend="'====='">-->
+            <cube-button @click="submitHandler">下一步</cube-button>
             <!--<cube-button :primary="true">重置</cube-button>-->
-          </cube-form-group>
+          <!--</cube-form-group>-->
+
         </cube-form>
       </cube-scroll>
     </div>
@@ -109,21 +109,30 @@
   import PopCheckBoxGroup from "../components/PopCheckBoxGroup";
   import PopRadioGroup from "../components/PopRadioGroup";
   import mainCaseReasonOption from "./formData"
-  import PersonForm from "./PersonForm";
+  // import PersonForm from "./PersonForm";
 
   export default {
     name: "BaseForm",
-    components: {PersonForm, PopRadioGroup, PopCheckBoxGroup},
+    components: { PopRadioGroup, PopCheckBoxGroup},
+    props: {
+      visible: {
+        type: Boolean,
+        default: true
+      },
+    },
+    watch: {
+      visible(val) {
+        this.showSelfBaseForm = val
+      }
+    },
     data() {
       // sessionStorageFormDate = JSON.parse(sessionStorage.getItem(''));
       return {
+        showSelfBaseForm: true,
         popMainCaseReasonShow: false, //主案由弹窗
         popSecretaryCaseReasonShow: false, //辅助按钮弹窗
 
-        popupVisible: false,
         fullHeight: document.documentElement.clientHeight - 56,
-
-        personFrom : [],
 
         formModel: {
           caseDatetime: '', //案发时间
@@ -368,7 +377,9 @@
         // console.log("submit");
         this.$refs.myForm.validate(valid => {
           if (valid) {
-            console.log(this.formModel);
+            // console.log(this.formModel);
+            this.$emit('submit', this.formModel)
+            this.$emit('update:visible', false)
           }
         });
         // console.log(this.$ref['formBase']);

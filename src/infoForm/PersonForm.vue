@@ -1,15 +1,21 @@
 <template>
-  <div>
+  <div v-if="showSelfPersonFrom" :style="{width: '100%', height: fullHeight + 'px' }">
     <!--<cube-form-item></cube-form-item>-->
-    <!--<p>涉案人员</p>-->
-    <cube-form
-      :model="model"
-      :schema="schema"
-      :immediate-validate="false"
-      :options="options"
-      @validate="validateHandler"
-      @submit="submitHandler"
-      @reset="resetHandler"></cube-form>
+    <p>涉案人员</p>
+    <div>
+      <cube-scroll :style="{width: '100%', height: fullHeight + 'px' }">
+        <cube-form
+          :model="formModel"
+          :schema="schema"
+          :immediate-validate="false"
+          :options="options"
+          @validate="validateHandler"
+          >
+        </cube-form>
+          <cube-button @click="submitHandler">下一步</cube-button>
+
+      </cube-scroll>
+    </div>
   </div>
 </template>
 
@@ -39,13 +45,24 @@
   export default {
     name: "PersonForm",
     props: {
-      title: String
+      title: String,
+      visible: {
+        type: Boolean,
+        default: false
+      },
+    },
+    watch: {
+      visible(val) {
+        this.showSelfPersonFrom = val
+      }
     },
     data() {
       return {
+        showSelfPersonFrom: false,
+        fullHeight: document.documentElement.clientHeight - 56,
         validity: {},
         valid: undefined,
-        model: {
+        formModel: {
           checkboxValue: false,
           checkboxGroupValue: [],
           inputValue: '',
@@ -155,7 +172,9 @@
     methods: {
       submitHandler(e) {
         e.preventDefault()
-        console.log('submit', e)
+        this.$emit('submit', this.formModel)
+        this.$emit('update:visible', false)
+        // console.log('submit', e)
       },
       validateHandler(result) {
         this.validity = result.validity

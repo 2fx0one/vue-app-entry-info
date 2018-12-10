@@ -8,7 +8,7 @@
 
     <main-page-baidu-map v-if="currentView==='map'"></main-page-baidu-map>
     <main-page-list v-if="currentView==='list'"></main-page-list>
-    <base-form v-if="currentView==='form'"></base-form>
+    <main-page-form v-if="currentView==='form'"></main-page-form>
 
     <cube-tab-bar
       v-model="selectedLabelDefault"
@@ -28,14 +28,15 @@
   export default {
     name: "MainPage",
     components: {
-      BaseForm,
+      MainPageForm,
+      // BaseForm,
       MainPageBaiduMap,
       MainPageList
     },
     data() {
       return {
-        currentView: 'form',
-        // currentView: 'map',
+        // currentView: 'form',
+        currentView: 'map',
         // currentLabels: '地图查看',
         // labels: [
         //   '地图查看',
