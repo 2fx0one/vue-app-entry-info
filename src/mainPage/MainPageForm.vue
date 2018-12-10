@@ -5,7 +5,7 @@
     <!--<cube-button :primary="true">Button</cube-button>-->
     <base-form :visible.sync="showBaseForm" @submit="baseSubmit"></base-form>
     <person-form  :visible.sync="ShowPersonFrom" @submit="personSubmit"></person-form>
-    <item-form  :visible.sync="ShowItemFrom" @submit="personSubmit"></item-form>
+    <item-form  :visible.sync="ShowItemFrom" @submit="itemSubmit"></item-form>
   </div>
 </template>
 
@@ -24,20 +24,32 @@
         ShowPersonFrom: false,
         PersonFromData: {},
         ShowItemFrom: false,
-        ShowItemData: {},
+        itemFromData: {},
         fullHeight: document.documentElement.clientHeight - 56,
       }
     },
     methods: {
       baseSubmit(val) {
-        this.baseFormData = val;
+        this.baseFormData = val
         console.log(this.baseFormData)
         this.ShowPersonFrom = true
       },
       personSubmit(val) {
-        this.PersonFromData = val;
+        this.PersonFromData = val
         console.log(this.PersonFromData)
+        this.ShowItemFrom = true;
+      },
+      itemSubmit(val) {
+        this.itemFromData = val
+        console.log(this.itemFromData)
+        this.$emit('submit', {
+          base: this.baseFormData,
+          person: this.showSelfPersonFrom,
+          item: this.itemFromData
+        })
+
       }
+
     }
   }
 </script>

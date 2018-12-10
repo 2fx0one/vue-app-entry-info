@@ -8,7 +8,7 @@
 
     <main-page-baidu-map v-if="currentView==='map'"></main-page-baidu-map>
     <main-page-list v-if="currentView==='list'"></main-page-list>
-    <main-page-form v-if="currentView==='form'"></main-page-form>
+    <main-page-form v-if="currentView==='form'" @submit="mainPageSubmitFrom"></main-page-form>
 
     <cube-tab-bar
       v-model="selectedLabelDefault"
@@ -107,13 +107,12 @@
         } else {
           this.currentView = opt[cur]
         }
+      },
+      mainPageSubmitFrom(val) {
+        console.log(val)
+        this.currentView = 'map'
+        this.selectedLabelDefault = '地图查看'
 
-        // this.current = cur
-        // if ('地图查看' === cur) {
-        //   this.baiduMapShow = 'map';
-        // } else if ('列表查看' === cur) {
-        //   this.baiduMapShow = 'list';
-        // }
       }
     }
   }
