@@ -22,9 +22,9 @@
         showBaseForm: true,
         baseFormData: {},
         ShowPersonFrom: false,
-        PersonFromData: {},
+        PersonFromData: [],
         ShowItemFrom: false,
-        itemFromData: {},
+        itemFromData: [],
         fullHeight: document.documentElement.clientHeight - 56,
       }
     },
@@ -42,10 +42,11 @@
       itemSubmit(val) {
         this.itemFromData = val
         console.log(this.itemFromData)
+
         this.$emit('submit', {
           base: this.baseFormData,
-          person: this.showSelfPersonFrom,
-          item: this.itemFromData
+          persons: this.showSelfPersonFrom,
+          items: this.itemFromData
         })
 
       }

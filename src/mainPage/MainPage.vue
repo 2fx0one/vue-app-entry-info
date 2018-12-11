@@ -35,8 +35,8 @@
     },
     data() {
       return {
-        // currentView: 'form',
-        currentView: 'map',
+        currentView: 'form',
+        // currentView: 'map',
         // currentLabels: '地图查看',
         // labels: [
         //   '地图查看',
@@ -108,8 +108,8 @@
           this.currentView = opt[cur]
         }
       },
-      mainPageSubmitFrom(val) {
-        // console.log(val)
+      mainPageSubmitFrom(data) {
+        // console.log(data)
         this.currentView = 'map'
         this.selectedLabelDefault = '地图查看'
         this.$createToast({

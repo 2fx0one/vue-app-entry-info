@@ -78,17 +78,17 @@ export function getQueryObject(url) {
  * @param {Sting} val input value
  * @returns {number} output value
  */
-export function getByteLen(val) {
-  let len = 0
-  for (let i = 0; i < val.length; i++) {
-    if (val[i].match(/[^\x00-\xff]/ig) != null) {
-      len += 1
-    } else {
-      len += 0.5
-    }
-  }
-  return Math.floor(len)
-}
+// export function getByteLen(val) {
+//   let len = 0
+//   for (let i = 0; i < val.length; i++) {
+//     if (val[i].match(/[^\x00-\xff]/ig) != null) {
+//       len += 1
+//     } else {
+//       len += 0.5
+//     }
+//   }
+//   return Math.floor(len)
+// }
 
 export function cleanArray(actual) {
   const newArray = []
@@ -306,10 +306,10 @@ export function uniqueObj(arr, name) {
 }
 
 /**
- * 
+ *
  * @desc   判断是否为手机号
- * @param  {String|Number} str 
- * @return {Boolean} 
+ * @param  {String|Number} str
+ * @return {Boolean}
  */
 export function isPhoneNum(str) {
   return /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/.test(str)

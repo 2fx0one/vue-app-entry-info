@@ -21,58 +21,7 @@
 </template>
 
 <script>
-  import { provinceList, cityList } from './area'
-
-  const cityData = provinceList
-  cityData.forEach(province => {
-    province.children = cityList[province.value]
-  //   // province.children.forEach(city => {
-  //   //   city.children = areaList[city.value]
-  //   // })
-  })
-  //籍贯选择
-  const nationalSelectComponent = {
-    props: {
-      value: {
-        type: Array,
-        default() {
-          return []
-        }
-      }
-    },
-    data() {
-      return {
-        selected: []
-      }
-    },
-    render(createElement) {
-      return createElement('cube-button', {
-        props: {
-          light: true
-        },
-        on: {
-          click: this.showPicker
-        }
-      }, this.selected.length ? this.selected.join(' ') : '点击选择籍贯')
-    },
-    mounted() {
-      this.picker = this.$createCascadePicker({
-        title: '籍贯选择',
-        data: cityData,
-        selectedIndex: this.value,
-        onSelect: this.selectHandler
-      })
-    },
-    methods: {
-      showPicker() {
-        this.picker.show()
-      },
-      selectHandler(selectedVal, selectedIndex, selectedTxt) {
-        this.selected = selectedTxt
-        this.$emit('input', selectedVal)
-      }
-    }
-  }
+  import nationalSelectComponent from "@/components/ProviceCityAreaPickerComonent"
 
   export default {
     name: "PersonForm",
@@ -228,13 +177,9 @@
                   },
                 },
                 {
-                  // type: 'select',
                   component: nationalSelectComponent,
                   modelKey: 'hometown',
                   label: '籍贯',
-                  // props: {
-                  //   options: [2015, 2016, 2017, 2018, 2019, 2020]
-                  // },
                   rules: {
                     required: true
                   }
@@ -383,10 +328,10 @@
       validateHandler(result) {
         this.validity = result.validity
         this.valid = result.valid
-        console.log('validity', result.validity, result.valid, result.dirty, result.firstInvalidFieldIndex)
+        // console.log('validity', result.validity, result.valid, result.dirty, result.firstInvalidFieldIndex)
       },
       resetHandler(e) {
-        console.log('reset', e)
+        // console.log('reset', e)
       }
     }
   }

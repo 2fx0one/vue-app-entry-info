@@ -45,7 +45,7 @@
       selected(val) {
         // console.log(val)
         // console.log(this.options
-        this.options.find(e => e.value === val)
+        // this.options.find(e => e.value === val)
         this.$emit('change', this.options.find(e => e.value === val))
       }
     },

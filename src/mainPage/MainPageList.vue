@@ -21,7 +21,7 @@
         <cube-swipe
           @item-click="onItemClick"
           @btn-click="onBtnClick"
-          :data="swipeData">
+          :data="caseListData">
         </cube-swipe>
       </cube-scroll>
     </div>
@@ -29,15 +29,23 @@
 </template>
 
 <script>
+  import {caseList, getDict} from "@/api/case";
+
   export default {
     name: "MainPageList",
     created() {
-      let swipeData = [];
-      for (let i = 0; i < 100; i++) {
-        swipeData.push({
+
+
+      // getDict('CASE_SOURCE').then(response => {
+      //   console.log(response)
+      // })
+      caseList({}).then(response => {
+        console.log(response)
+        this.caseListData = response.map(v => ({
           item: {
-            text: '测试' + i,
-            value: i
+            target: v,
+            text: v.caseName,
+            value: v.id
           },
           btns: [
             // {
@@ -51,14 +59,37 @@
               color: '#ff3a32'
             }
           ]
-        })
-      }
-      this.swipeData = swipeData;
+        }))
+      }).catch(err => console.log(err))
+      console.log(this.fullHeight);
+
+      // let swipeData = [];
+      // for (let i = 0; i < 100; i++) {
+      //   swipeData.push({
+      //     item: {
+      //       text: '测试' + i,
+      //       value: i
+      //     },
+      //     btns: [
+      //       // {
+      //       //   action: 'clear',
+      //       //   text: '不再关注',
+      //       //   color: '#c8c7cd'
+      //       // },
+      //       {
+      //         action: 'delete',
+      //         text: '编辑',
+      //         color: '#ff3a32'
+      //       }
+      //     ]
+      //   })
+      // }
+      // this.swipeData = swipeData;
     },
     data() {
       return {
         fullHeight: document.documentElement.clientHeight - 56,
-        checkList: ['1', '2', '3'],
+        checkList: ['2'],
         options: [
           {
             label: '经营户',
@@ -73,7 +104,7 @@
             value: '3',
           }
         ],
-        swipeData: [{
+        caseListData: [{
           item: {
             text: '测试1',
             value: 1
@@ -91,46 +122,17 @@
             }
           ]
         }],
-        // title: 'Current City: BEIJING',
-        // cityData: [
-        //   {
-        //     "name": "★Hot City",
-        //     "items": [
-        //       {
-        //         "name": "BEIJING",
-        //         "value": 1
-        //       },
-        //       {
-        //         "name": "SHANGHAI",
-        //         "value": 2
-        //       }
-        //     ]
-        //   },
-        //   {
-        //     "name": "A",
-        //     "items": [
-        //       {
-        //         "name": "ANSHAN",
-        //         "value": 3
-        //       },
-        //       {
-        //         "name": "ANQING",
-        //         "value": 4
-        //       }
-        //     ]
-        //   }
-        // ]
       }
     },
     methods: {
       clickCheckBox() {
         console.log(this.checkList)
       },
-      selectItem(item) {
-        console.log('selectItem item:', item)
-      },
       onItemClick(item) {
         console.log('click item:', item)
+        console.log('click createTime:', item.target.createTime)
+        console.log('click gisLongitude:', item.target.gisLongitude)
+        console.log('click gisLatitudes:', item.target.gisLatitudes)
       },
       onBtnClick(btn, index) {
         if (btn.action === 'delete') {
@@ -162,6 +164,11 @@
 <style lang="stylus" rel="stylesheet/stylus">
   .swipe-wrapper {
     height 500px;
+  }
+
+  .cube-swipe-item-inner {
+    text-align: left;
+    line-height: 30px
   }
 
   .scroll-list-wrap {

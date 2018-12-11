@@ -18,17 +18,17 @@
                :style="{width: '100%', height: baiduMapHeight + 'px' }"
                @ready="handlerBaiduMapReady"
                class="bm-view">
-      <bm-marker v-for="marker in markers" :position="{lng: marker.lng, lat: marker.lat}" @click="clickHandler(marker)">
-        <bm-label :content="marker.labelName" :labelStyle="{color: 'red', fontSize : '14px'}"
+      <bm-marker v-for="item in markers" :position="{lng: item.lng, lat: item.lat}" @click="clickHandler(item)">
+        <bm-label :content="item.labelName" :labelStyle="{color: 'red', fontSize : '14px'}"
                   :offset="{width: -10, height: 30}"/>
       </bm-marker>
-      <bm-info-window v-for="marker in markers"
-                      :position="{lng: marker.lng, lat: marker.lat}"
-                      :title="marker.infoWindowTitle"
-                      :show="marker.infoWindowShow"
-                      @close="infoWindowClose(marker)"
-                      @open="infoWindowOpen(marker)">
-        <p v-text="marker.infoWindowContent"></p>
+      <bm-info-window v-for="item in markers"
+                      :position="{lng: item.lng, lat: item.lat}"
+                      :title="item.infoWindowTitle"
+                      :show="item.infoWindowShow"
+                      @close="infoWindowClose(item)"
+                      @open="infoWindowOpen(item)">
+        <p v-text="item.infoWindowContent"></p>
         <!--<button @click="infoWindowClose(marker)">Clear</button>-->
       </bm-info-window>
 
@@ -36,21 +36,6 @@
         <!--<button @click="openDistanceTool">开启测距</button>-->
         <cube-input v-model="keyword" :eye="eye" :placeholder="'请输入搜索地址'"></cube-input>
       </bm-control>
-
-      <!--<bm-control anchor="BMAP_ANCHOR_BOTTOM_LEFT">-->
-        <!--&lt;!&ndash;<cube-checkbox-group&ndash;&gt;-->
-        <!--&lt;!&ndash;style="position: fixed; bottom: 100px"&ndash;&gt;-->
-        <!--&lt;!&ndash;v-model="checkList"&ndash;&gt;-->
-        <!--&lt;!&ndash;:options="options"&ndash;&gt;-->
-        <!--&lt;!&ndash;:horizontal="true"&ndash;&gt;-->
-        <!--&lt;!&ndash;shape="square"&ndash;&gt;-->
-        <!--&lt;!&ndash;:hollow-style="true"&ndash;&gt;-->
-        <!--&lt;!&ndash;@click="clickCheckBox">&ndash;&gt;-->
-        <!--&lt;!&ndash;</cube-checkbox-group>&ndash;&gt;-->
-        <!--<cube-button :inline="true" @click="btnClick()">经营户</cube-button>-->
-        <!--<cube-button :inline="true" @click="btnClick()">案件</cube-button>-->
-        <!--<cube-button :inline="true" @click="btnClick()">情报</cube-button>-->
-      <!--</bm-control>-->
 
 
       <bm-local-search :keyword="keyword" :auto-viewport="true" :location="location"></bm-local-search>
@@ -71,29 +56,43 @@
 
 <script>
   import store from '../store/index'
+  import {caseList} from '@/api/case'
   export default {
     name: "MainPageBaiduMap",
     created() {
+      caseList({}).then(response => {
+        console.log(response)
+        this.markers = response.filter(v => v.gisLongitude && v.gisLatitudes).map(v=>
+          ({
+          lng: v.gisLongitude,
+          lat: v.gisLatitudes,
+          labelName: v.caseName,
+          infoWindowShow: false,
+          infoWindowTitle: '标题' ,
+          infoWindowContent: '案件内容'
+        }))
+        console.log(this.markers)
+      }).catch(err => console.log(err))
       // console.log(this.fullHeight);
     },
     watch: {
-      checkList: function (newVal, oldVal) {
-        // console.log(newVal)
-        // console.log(oldVal)
-        let markers = []
-        for (let i = 0; i < 10; i++) {
-          markers.push({
-            lng: Math.random() + 115,
-            lat: Math.random() + 28,
-            labelName: '案件名称' + i,
-            infoWindowShow: false,
-            infoWindowTitle: '标题' + i,
-            infoWindowContent: '案件内容' + i,
-
-          })
-        }
-        this.markers = markers;
-      }
+      // checkList: function (newVal, oldVal) {
+      //   // console.log(newVal)
+      //   // console.log(oldVal)
+      //   let markers = []
+      //   for (let i = 0; i < 10; i++) {
+      //     markers.push({
+      //       lng: Math.random() + 115,
+      //       lat: Math.random() + 28,
+      //       labelName: '案件名称' + i,
+      //       infoWindowShow: false,
+      //       infoWindowTitle: '标题' + i,
+      //       infoWindowContent: '案件内容' + i,
+      //
+      //     })
+      //   }
+      //   this.markers = markers;
+      // }
     },
     data() {
       return {
@@ -105,14 +104,14 @@
         keyword: '',
         baiduMapHeight: document.documentElement.clientHeight - 102,
         markers: [
-          {
-            lng: Math.random() + 115,
-            lat: Math.random() + 28,
-            labelName: '案件名称',
-            infoWindowShow: false,
-            infoWindowTitle: '标题',
-            infoWindowContent: '案件内容'
-          }
+          // {
+          //   lng: Math.random() + 115,
+          //   lat: Math.random() + 28,
+          //   labelName: '案件名称',
+          //   infoWindowShow: false,
+          //   infoWindowTitle: '标题',
+          //   infoWindowContent: '案件内容'
+          // }
         ],
         center: {lng: 115.89, lat: 28.68},
         zoom: 9,
