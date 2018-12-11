@@ -154,6 +154,21 @@
         }))
       })
 
+      getDict('TRANSPORT_WAY').then(response => {
+        console.log(response)
+        this.fields.TRANSPORTTYPE.props.options = response.map(v => ({
+          text: v.dmmc,
+          value: v.dmbh
+        }))
+      })
+
+      getDict('TRANSPORT_CASE_ADDRESS').then(response => {
+        console.log(response)
+        this.fields.TRANSPORT_CASE_PLACE.props.options = response.map(v => ({
+          text: v.dmmc,
+          value: v.dmbh
+        }))
+      })
     },
     watch: {
       visible(val) {
@@ -391,7 +406,7 @@
             modelKey: 'TRANSPORTTYPE',
             label: '运输方式',
             props: {
-              options: ['公路运输', '铁路运输', '航空运输', '其它']
+              options: []
             },
             rules: {
               required: true
@@ -402,7 +417,7 @@
             modelKey: 'TRANSPORT_CASE_PLACE',
             label: '运输案件案发地',
             props: {
-              options: ['物流场站', '道路途中']
+              options: []
             },
             rules: {
               required: true
