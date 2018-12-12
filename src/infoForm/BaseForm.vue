@@ -51,6 +51,7 @@
               <!--<cube-checkbox-group v-model="formModel.EVIDENCE_TYPE" :options="formOptions.EVIDENCE_TYPE_OPTIONS" />-->
             </cube-form-item>
             <cube-form-item :field="fields['CASE_SOURCE']"></cube-form-item>
+            <cube-form-item :field="fields['MANAGE_TYPE']"></cube-form-item>
             <cube-form-item :field="fields['caseSourceLocation']"></cube-form-item>
             <cube-form-item :field="fields['caseGoesLocation']"></cube-form-item>
 
@@ -109,6 +110,7 @@
   import caseGoesLocationPicker from "@/components/ProviceCityAreaPickerComonent"
   import DataTimePickerComponent from "@/components/DataTimePickerComponent"
   import {getDict} from "@/api/case";
+  import {mapToLabelAndValue, mapToTextAndValue} from "@/utils";
 
 
   export default {
@@ -125,49 +127,36 @@
       //CHECKBOX 证据类型
       getDict('EVIDENCE_TYPE').then(response => {
         // console.log(response)
-        this.fields.EVIDENCE_TYPE.props.options = response.map(v => ({
-          label: v.dmmc,
-          value: v.dmbh
-        }))
-        // console.log(this.formOptions.EVIDENCE_TYPE_OPTIONS)
+        this.fields.EVIDENCE_TYPE.props.options = mapToLabelAndValue(response)
       })
       //SELECT 案件来源
       getDict('CASE_SOURCE').then(response => {
-        console.log(response)
-        this.fields.CASE_SOURCE.props.options = response.map(v => ({
-          text: v.dmmc,
-          value: v.dmbh
-        }))
+        // console.log(response)
+        this.fields.CASE_SOURCE.props.options =  mapToTextAndValue(response)
+      })
+
+      //案件类型 CASE_TYPE
+      getDict('CASE_TYPE').then(response => {
+        // console.log(response)
+        this.fields.MANAGE_TYPE.props.options =  mapToTextAndValue(response)
       })
 
       //案由 分为主 和 辅
       getDict('CASE_ORIGIN').then(response => {
-        console.log(response)
-        this.fields.mainCaseReason.props.options = response.map(v => ({
-          label: v.dmmc,
-          value: v.dmbh
-        }))
+        // console.log(response)
+        this.fields.mainCaseReason.props.options = mapToLabelAndValue(response)
 
-        this.fields.secretaryCaseReason.props.options = response.map(v => ({
-          label: v.dmmc,
-          value: v.dmbh
-        }))
+        this.fields.secretaryCaseReason.props.options = mapToLabelAndValue(response)
       })
 
       getDict('TRANSPORT_WAY').then(response => {
-        console.log(response)
-        this.fields.TRANSPORTTYPE.props.options = response.map(v => ({
-          text: v.dmmc,
-          value: v.dmbh
-        }))
+        // console.log(response)
+        this.fields.TRANSPORTTYPE.props.options = mapToTextAndValue(response)
       })
 
       getDict('TRANSPORT_CASE_ADDRESS').then(response => {
-        console.log(response)
-        this.fields.TRANSPORT_CASE_PLACE.props.options = response.map(v => ({
-          text: v.dmmc,
-          value: v.dmbh
-        }))
+        // console.log(response)
+        this.fields.TRANSPORT_CASE_PLACE.props.options = mapToTextAndValue(response)
       })
     },
     watch: {
@@ -177,7 +166,7 @@
     },
     data() {
       // sessionStorageFormDate = JSON.parse(sessionStorage.getItem(''));
-      let location = JSON.parse(sessionStorage.getItem('location'));
+      let location = JSON.parse(sessionStorage.getItem('location'))
       if (!location) {
         location = this.$store.getters.location
       }
@@ -190,19 +179,21 @@
         fullHeight: document.documentElement.clientHeight - 56,
 
         formModel: {
-          CASE_ID: '',
-          CASE_NAME: '',
+          CASE_ID: 'test测试编号',
+          CASE_NAME: 'test测试名字',
           CASE_GOODS_AMT: '',
-          CASE_DATE: [], //案发时间
-          CASE_PLACE: '', //案发地点
+          CASE_DATE: [2018, 12, 12, 12, 12, 12], //案发时间
+          CASE_PLACE: 'test案发', //案发地点
           GIS_LONGITUDE: location['lng'],//store.state.location['lng'], // 经度
           GIS_LATITUDES: location['lat'], //store.state.location['lat'], // 纬度
-          EVIDENCE_TYPE: [], //证据类型 	复选 书证、物证、鉴定结论、勘验笔录、询问笔录、证人证言、视听资料、其他；
+          EVIDENCE_TYPE: ['01'], //证据类型 	复选 书证、物证、鉴定结论、勘验笔录、询问笔录、证人证言、视听资料、其他；
           CASE_SOURCE: '01',// 案件来源	  投诉举报、市场查获、案件移交、指定管辖、上级交办、其他；
 
+          MANAGE_TYPE: '02',
+
           //TODO 为定义格式 先不处理
-          caseSourceLocation: [],// 案件来源指向地	是		省市区（县），参考字典
-          caseGoesLocation: [],// 案件去向指向地	是 省市区（县），参考字典
+          caseSourceLocation: ['110000', '110100', '110101'],// 案件来源指向地	是		省市区（县），参考字典
+          caseGoesLocation: ['110000', '110100', '110101'],// 案件去向指向地	是 省市区（县），参考字典
 
           // CASE_KIND:'案由', //TODO 暂时不传递 等待商量后的存放位置
           mainCaseReason: '1', // *主案由 是	单选
@@ -210,14 +201,14 @@
           secretaryCaseReason: ['1'], // *辅案由 是	复选
           secretaryCaseReasonLabels: ['销售无标志的外国卷烟（国标）'],
 
-          ASSIST_UNIT: '', // *协办单位	是 input
+          ASSIST_UNIT: 'test协办单位', // *协办单位	是 input
           // 查获环节	是	下拉选择
           IS_MARKET: true,// 是否集贸市场	是	下拉选择	是or否
-          MARKET_NAME: '集贸市场名称',// 集贸市场名称	是
+          MARKET_NAME: 'test集贸市场名称',// 集贸市场名称	是
           IS_TRANSPORT_CASE: true,// 是否为运输案件	是	下拉选择	是or否
-          TRANSPORTTYPE: '公路运输',// 运输方式 // 是	下发选择 运输方式	公路运输、铁路运输、航空运输、其他；
-          TRANSPORT_CASE_PLACE: '物流场站',// 运输案件案发地 // 是	下拉选择 运输案件案发地  	物流场站、道路途中；
-          LICENSE_CODE: ''// 许可证号	是 input
+          TRANSPORTTYPE: '01',// 运输方式 // 是	下发选择 运输方式	公路运输、铁路运输、航空运输、其他；
+          TRANSPORT_CASE_PLACE: '01',// 运输案件案发地 // 是	下拉选择 运输案件案发地  	物流场站、道路途中；
+          LICENSE_CODE: 'test许可证号'// 许可证号	是 input
         },
 
         fields: {
@@ -229,7 +220,7 @@
               placeholder: '请输入'
             },
             rules: {
-              required: false
+              required: true
             }
           },
           CASE_NAME: {
@@ -240,7 +231,7 @@
               placeholder: '请输入案发名称'
             },
             rules: {
-              required: false
+              required: true
             }
           },
           CASE_GOODS_AMT: {
@@ -261,7 +252,7 @@
             modelKey: 'CASE_DATE',
             label: '案发时间',
             rules: {
-              required: false
+              required: true
             }
           },
           CASE_PLACE: {
@@ -272,7 +263,7 @@
               placeholder: '请输入案发地点'
             },
             rules: {
-              required: false
+              required: true
             }
           },
           GIS_LONGITUDE: {
@@ -319,12 +310,23 @@
               required: true
             }
           },
+          MANAGE_TYPE: {
+            type: 'select',
+            modelKey: 'MANAGE_TYPE',
+            label: '案件类型',
+            props: {
+              options: []
+            },
+            rules: {
+              required: true
+            }
+          },
           caseSourceLocation: {
             component: caseSourceLocationPicker,
             modelKey: 'caseSourceLocation',
             label: '案件来源地',
             rules: {
-              required: false,
+              required: true,
             }
           },
           caseGoesLocation: {
@@ -336,7 +338,7 @@
               placeholder: '请输入'
             },
             rules: {
-              required: false
+              required: true
             }
           },
           mainCaseReason: {
@@ -369,7 +371,7 @@
               placeholder: '请输入',
             },
             rules: {
-              required: false
+              required: true
             }
           },
           IS_MARKET: {
@@ -409,7 +411,7 @@
               options: []
             },
             rules: {
-              required: true
+              required: false
             }
           },
           TRANSPORT_CASE_PLACE: {
@@ -431,7 +433,7 @@
               placeholder: '请输入',
             },
             rules: {
-              required: false
+              required: true
             }
           },
         } //end of fields
@@ -459,30 +461,18 @@
         // console.log('validity', result.validity, result.valid, result.dirty, result.firstInvalidFieldIndex)
       },
       submitHandler() {
-        // console.log("submit");
         this.$refs.myForm.validate(valid => {
           if (valid) {
-            //CASE_ID:20181210test案件编号
-            //CASE_NAME:20181210test案件名称
-            //CASE_SOURCE:01案件来源
-            //MANAGE_TYPE:02案件类别
-            //CASE_DATE:20181210案发时间
-            //CASE_PLACE:20181210test案发地
-            //CASE_KIND:02案由
-            //CASE_BRIEF:20181210test案件摘要
-            //CASE_GOODS_AMT:20181210testCASE_GOODS_AMT
-            //GIS_LONGITUDE:115.4444
-            //GIS_LATITUDES:28.5555
-            //IS_TRANSPORT_CASE:1是否运输案件
-            //TRANSPORTTYPE:01运输方式
-            //TRANSPORT_CASE_PLACE:02运输案件案发地
-            //LICENSE_CODE:123123许可证号
             this.$emit('submit', this.formModel)
             this.$emit('update:visible', false)
+          } else {
+            this.$createToast({
+              time: 1000,
+              type: 'txt',
+              txt: '存在必填项，请检查表单'
+            }).show()
           }
         });
-        // console.log(this.$ref['formBase']);
-        // this.$refs['formBase'].validateHandler()
 
       },
       //

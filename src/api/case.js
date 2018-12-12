@@ -27,4 +27,4 @@ export const caseList = data => request.get(`/getCaseList`, data)
 export const getDict = data => request.get(`/getDict?dictLb=${data}`, data)
 // export const getDict = data => request.get(`/getDict?${data}`, data)
 
-export const submitCase = data => request.post(`/submitCase`, data)
+export const submitCase = data => request.post(`/submitCase?cmd=add&id=${data.id}`, data)

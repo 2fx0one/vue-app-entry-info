@@ -1,5 +1,6 @@
 //省市县选择
 const DataTimePickerComponent = {
+  name: 'DataTimePickerComponent',
   props: {
     value: {
       type: Array,
@@ -7,6 +8,11 @@ const DataTimePickerComponent = {
         return []
       }
     }
+  },
+  watch: {
+    // value(val) {
+    //   this.selected = val
+    // }
   },
   data() {
     return {
@@ -16,7 +22,7 @@ const DataTimePickerComponent = {
   render(createElement) {
     return createElement('cube-button', {
       props: {
-        light: true
+        light: true,
       },
       on: {
         click: this.showPicker
@@ -31,7 +37,7 @@ const DataTimePickerComponent = {
     //   onSelect: this.selectHandler
     // })
     this.dateTimePicker = this.$createDatePicker({
-      title: '选择案发时间',
+      title: '请选择时间',
       min: new Date(2008, 7, 8, 8, 0, 0),
       max: new Date(2199, 9, 20, 20, 59, 59),
       value: new Date(),

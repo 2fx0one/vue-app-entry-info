@@ -9,6 +9,7 @@ cityData.forEach(province => {
 })
 //省市县选择
 const PCAComponent = {
+  name: 'PCAComponent',
   props: {
     value: {
       type: Array,

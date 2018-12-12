@@ -1,6 +1,47 @@
 /**
  * Created by Vexth on 16/11/18.
  */
+import Quagga from 'quagga';
+
+export function mapToLabelAndValue(data) {
+  return ('object' === typeof data) ? data.map(v => ({label: v.dmmc, value: v.dmbh})) : data
+}
+
+export function mapToTextAndValue(data) {
+  return ('object' === typeof data) ? data.map(v => ({text: v.dmmc, value: v.dmbh})) : data
+}
+export function getBarcodeFormImage(file)
+{
+  // let inputDOM = this.$refs.inputer;
+  // 通过DOM取文件数据
+  // let file = inputDOM.files[0];
+  // console.log(file);
+  // console.log(URL.createObjectURL(file))
+  return new Promise(function(resolve, reject) {
+    Quagga.decodeSingle({
+        locator: {
+          patchSize: "medium",
+          halfSample: true
+        },
+        decoder: {
+          readers: [{
+            format: "ean_reader",
+            config: {}
+          }]
+        },
+        locate: true,
+        src: URL.createObjectURL(file),
+        //'data:image/jpg;base64,' + this.result,//'/test/fixtures/code_128/image-001.jpg' // or 'data:image/jpg;base64,' + data
+      },
+      function (result) {
+        if (result.codeResult) {
+          return resolve(result.codeResult)
+        } else {
+          return reject()
+        }
+      });
+  })
+}
 
 export function parseTime(time, cFormat) {
   if (arguments.length === 0) {
@@ -73,22 +114,6 @@ export function getQueryObject(url) {
   return obj
 }
 
-/**
- *get getByteLen
- * @param {Sting} val input value
- * @returns {number} output value
- */
-// export function getByteLen(val) {
-//   let len = 0
-//   for (let i = 0; i < val.length; i++) {
-//     if (val[i].match(/[^\x00-\xff]/ig) != null) {
-//       len += 1
-//     } else {
-//       len += 0.5
-//     }
-//   }
-//   return Math.floor(len)
-// }
 
 export function cleanArray(actual) {
   const newArray = []
@@ -170,68 +195,6 @@ export function toggleClass(element, className) {
   element.className = classString
 }
 
-export const pickerOptions = [
-  {
-    text: '今天',
-    onClick(picker) {
-      const end = new Date()
-      const start = new Date(new Date().toDateString())
-      end.setTime(start.getTime())
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近一周',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(end.getTime() - 3600 * 1000 * 24 * 7)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近一个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近三个月',
-    onClick(picker) {
-      const end = new Date(new Date().toDateString())
-      const start = new Date()
-      start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
-      picker.$emit('pick', [start, end])
-    }
-  }]
-
-// 从现在开始向后推算
-export const pickerOptionsFromNowOn = [
-  {
-    text: '最近一周',
-    onClick(picker) {
-      const start = new Date()
-      const end = new Date()
-      end.setTime(start.getTime() + 3600 * 1000 * 24 * 7)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近一个月',
-    onClick(picker) {
-      const start = new Date()
-      const end = new Date()
-      end.setTime(start.getTime() + 3600 * 1000 * 24 * 30)
-      picker.$emit('pick', [start, end])
-    }
-  }, {
-    text: '最近三个月',
-    onClick(picker) {
-      const start = new Date()
-      const end = new Date()
-      end.setTime(start.getTime() + 3600 * 1000 * 24 * 90)
-      picker.$emit('pick', [start, end])
-    }
-  }]
 
 export function getTime(type) {
   if (type === 'start') {
@@ -240,42 +203,6 @@ export function getTime(type) {
     return new Date(new Date().toDateString())
   }
 }
-
-export function debounce(func, wait, immediate) {
-  let timeout, args, context, timestamp, result
-
-  const later = function () {
-    // 据上一次触发时间间隔
-    const last = +new Date() - timestamp
-
-    // 上次被包装函数被调用时间间隔last小于设定时间间隔wait
-    if (last < wait && last > 0) {
-      timeout = setTimeout(later, wait - last)
-    } else {
-      timeout = null
-      // 如果设定为immediate===true，因为开始边界已经调用过了此处无需调用
-      if (!immediate) {
-        result = func.apply(context, args)
-        if (!timeout) context = args = null
-      }
-    }
-  }
-
-  return function (...args) {
-    context = this
-    timestamp = +new Date()
-    const callNow = immediate && !timeout
-    // 如果延时不存在，重新设定延时
-    if (!timeout) timeout = setTimeout(later, wait)
-    if (callNow) {
-      result = func.apply(context, args)
-      context = args = null
-    }
-
-    return result
-  }
-}
-
 export function deepClone(source) {
   if (!source && typeof source !== 'object') {
     throw new Error('error arguments', 'shallowClone')
